@@ -1,0 +1,101 @@
+{% extends 'base.html' %} {% block title %} Home {% endblock %} {% block nav %}
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+    <!-- Navbar content -->
+    <div class="nav navbar-nav">
+        <a class="nav-item nav-link" href="{% url 'core:home' %}">Home<span class="sr-only"></span></a>
+    </div>
+    <form class="form-inline pull-xs-right">
+        <input class="form-control" type="text" placeholder="Search">
+        <button class="btn btn-outline-info" type="submit">Search</button>
+    </form>
+</nav>
+{% endblock %} {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="text-xs-center">
+            {% if error %}
+            <div class="alert alert-warning alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ error }}</strong>
+            </div>
+            {% endif %}
+            <script>
+            $(".alert").alert('close')
+            </script>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 offset-md-1">
+            <div class="card card-block">
+                <div class="text-xs-center">
+                    <h3 class="card-title">Login</h3>
+                </div>
+                <form action="{% url 'core:login_view' %}" method=POST validate>
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label">username</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" type="text" id="" name="username">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-search-input" class="col-xs-3 col-form-label">password</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" type="password" name="password">
+                        </div>
+                    </div>
+                    <div style="padding-top: 8px;"></div>
+                    <div class="form-group row text-xs-center">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Remember me</span>
+                        </label>
+                    </div>
+                    <div style="padding-bottom: 9px;"></div>
+                    <div class="form-group row">
+                        <div class="col-xs-12 text-xs-center">
+                            <button class="btn btn-outline-info btn-lg" type="submit">Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4 offset-md-1">
+            <div class="card card-block">
+                <div class="text-xs-center">
+                    <h3 class="card-title">Register</h3>
+                </div>
+                <form action="{% url 'core:register' %}" method=POST validate>
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label">username</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" type="text" id="usernam" name="username"> 
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label">email</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" type="text" id="" name="email">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-search-input" class="col-xs-3 col-form-label">password</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" type="password" name="password">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-xs-12 text-xs-center">
+                            <button class="btn btn-outline-info btn-lg" type="submit">Register</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

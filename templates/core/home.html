@@ -1,0 +1,85 @@
+{% extends 'base.html' %} {% load static %}{% block title %} Home {% endblock %} {% block nav %}
+
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+    <!-- Navbar content -->
+    <div class="nav navbar-nav">
+        <a class="nav-item nav-link active" href="{% url 'core:home' %}">Home<span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" href="{% url 'core:newpost' %}">New</a>
+                {% if request.user.is_authenticated %}
+        <a href="{% url 'core:my_posts' %}" class="nav-item nav-link">{{user.username}}</a>
+         {% endif %}
+    </div>
+    <form class="form-inline pull-xs-right" action="{% url 'core:search' %}" method="POST">
+    {% csrf_token %}
+        <input class="form-control" type="text" placeholder="Search with color" name="search" required>
+        <button class="btn btn-outline-info" type="submit">Search</button>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'core:logout_view' %}" class="btn btn-outline-danger">Logout</a> {% endif %}
+    </form>
+</nav>
+{% endblock %} {% block content %}
+<div class="container">
+<div class="text-md-center display-4">Feed</div>
+<hr style="width:200px">
+
+    {% if all_posts %} {% for post in all_posts %}
+    <div class="row">
+    <div class="col-xs-3">
+                {% if post.image %}
+         <img class='img-responsive' src='{{ post.image.url }}' style="width:270px">
+         {% else %}
+         <img class='img-responsive' src="{% static 'img/favicon.ico' %}" style="width:270px">
+        {% endif %}
+         
+        
+    </div>
+        <div class="col-xs-7">
+
+            <a href="{% url 'core:detail' post.title %}" class="h2 ">{{ post.title }}</a>
+            <br>
+            <p>{{ post.content|truncatewords:60 }} <a href="{% url 'core:detail' post.title %}" class="">Read</a></p>
+            {% if request.user != post.user %}
+            {% if request.user.username in all_voters|key:post.id %}
+           
+<div class="wrap">
+  <div class="votes" id="{{post.id}}">{{post.votes}}</div>
+  <div  onclick="upvoteme('{{post.id}}')" id="bluebuttons" class="{{post.id}}">Upvoted</div>
+</div>
+{% else %}
+<div class="wrap">
+  <div class="votes" id="{{post.id}}">{{post.votes}}</div>
+  <div class="{{post.id}}" onclick="upvoteme('{{post.id}}')" id="redbuttons">Upvote</div>
+</div>
+{% endif %}
+{% else %}
+<div class="wrap">
+  <div class="votes" id="{{post.id}}">{{post.votes}} upvotes</div>
+</div>
+<br>
+
+<br>
+{% endif %}
+            <a href="{% url 'core:view_posts' post.user %}" class="h6 text-primary">{{ post.user }}</a>
+            
+            {% if all_tags|key:post.id != None  %}
+            <p class="lead text-default">
+
+                {% for i in all_tags|key:post.id %}
+                <a href="{% url 'core:tags' i %}">#{{i}}</a>
+                {% endfor %}
+            </p>
+            {% endif %}
+        </div>
+        <div class="col-xs-2">
+            <p class=" display-5">
+                {{post.created_at}}
+            </p>
+        </div>
+    </div>
+    <hr>
+    <br>
+    {% endfor %} {% else %}
+    <p>Write the post today! <a href="{% url 'core:newpost' %}" class="btn btn-info ">News</a></p>
+    {% endif %}
+</div>
+{% endblock %}
